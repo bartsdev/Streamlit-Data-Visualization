@@ -30,6 +30,13 @@ df = load_data()
 sector = df.groupby('GICS Sector')
 
 # Sidebar - Sector selection
+
+ticker_time_range = ['1d','5d','1mo','3mo','6mo','1y','2y','5y','10y','ytd','max']
+time_period = st.sidebar.selectbox('Time Period', ticker_time_range)
+
+sorted_symbol_unique = sorted( df['Symbol'].unique())
+selected_symbol = st.sidebar.selectbox('Symbol Name', sorted_symbol_unique)
+
 sorted_sector_unique = sorted( df['GICS Sector'].unique())
 selected_sector = st.sidebar.multiselect('Sector Name', sorted_sector_unique,sorted_sector_unique)
 
@@ -70,8 +77,8 @@ st.markdown(filedownload(df_selected_sector), unsafe_allow_html=True)
 if not df_selected_sector.empty:
     data = yf.download(
     tickers = list(df_selected_sector[:10].Symbol),
-    period = "ytd",
-    interval = "1d",
+    period = time_period,
+    interval = "15m",
     group_by = 'ticker',
     auto_adjust = True,
     prepost = True,
